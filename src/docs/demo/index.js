@@ -33,12 +33,11 @@ const ComponentNeedToPreload = () => {
   );
 };
 
-const Landing = memo(({ children }) => {
+const Landing = memo(() => {
   const [currentTarget, setCurrentTarget] = useState();
   return (
     <div className='w-full'>
-      {children}
-      <H2>Demon</H2>
+      <H2>Demo</H2>
       <p className='my-4'>Any background-image of div and src image of img will be pre-load.</p>
       {currentTarget && <ComponentNeedToPreload />}
       <div className='btn-group'>

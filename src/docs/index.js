@@ -1,11 +1,8 @@
 import { Suspense, lazy, memo, useContext, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
-import Installation from './components/installation';
 import NavBar from './components/navBar';
 import { ACTION, Context, PAGE, initialState, reducer } from './setting';
 import './styles.less';
-import config from './config';
-import H2 from './components/h2';
 
 const Pages = memo(() => {
   const [context] = useContext(Context);
@@ -17,12 +14,6 @@ const Pages = memo(() => {
     if (target) {
       return (
         <Suspense fallback=''>
-          <H2>installation</H2>
-          <Installation language='sh'>{`npm i ${config.name}`}</Installation>
-          <H2>Usage</H2>
-          <a className='link' href={config.url}>
-            readme
-          </a>
           <Element />
         </Suspense>
       );

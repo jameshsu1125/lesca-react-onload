@@ -1,6 +1,6 @@
 {
   "name": "lesca-react-onload",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Progress and timing provided for loading and animation.",
   "main": "lib/index.js",
   "scripts": {
