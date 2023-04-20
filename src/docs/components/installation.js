@@ -6,8 +6,9 @@ import prettier from 'prettier/esm/standalone.mjs';
 import prettierPlugins from 'prettier/esm/parser-babel.mjs';
 import './index.less';
 
-const Installation = ({ children, language }) => {
+const Installation = ({ children, language = 'jsx', code }) => {
   const text = useMemo(() => {
+    if (code) return code;
     if (children instanceof Array) {
       const hasComponent = children.filter((child) => child instanceof Object);
       if (hasComponent.length === 0) return children.join('');

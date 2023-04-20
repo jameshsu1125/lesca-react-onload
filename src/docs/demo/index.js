@@ -14,7 +14,7 @@ const ComponentNeedToPreload = () => {
           setInfo(`target: ${url} was loaded.`);
         }}
         onload={(e) => {
-          const { total, loaded, url } = e;
+          const { total, loaded } = e;
           setPercent(Math.floor((loaded / total) * 100));
           setInfo(`all target was loaded`);
         }}
