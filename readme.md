@@ -13,6 +13,8 @@ Progress and timing provided for loading and animation.
 
 #### [Live Demo](https://jameshsu1125.github.io/lesca-react-onload/)
 
+#### [codesandbox.io](https://codesandbox.io/s/lesca-react-onload-demo-xu0b3t)
+
 # Installation
 
 ```sh

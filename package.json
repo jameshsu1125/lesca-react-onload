@@ -1,6 +1,6 @@
 {
   "name": "lesca-react-onload",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Progress and timing provided for loading and animation.",
   "main": "lib/index.js",
   "scripts": {
@@ -67,6 +67,6 @@
     "url": "git@github.com:jameshsu1125/lesca-react-onload.git"
   },
   "dependencies": {
-    "lesca-image-onload": "^3.0.2"
+    "lesca-image-onload": "^3.0.3"
   }
 }
