@@ -19,6 +19,10 @@ const Pages = memo(() => {
         <Suspense fallback=''>
           <H2>installation</H2>
           <Installation language='sh'>{`npm i ${config.name}`}</Installation>
+          <H2>Usage</H2>
+          <a className='link' href={config.url}>
+            readme
+          </a>
           <Element />
         </Suspense>
       );

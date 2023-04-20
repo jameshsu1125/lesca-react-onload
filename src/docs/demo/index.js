@@ -1,27 +1,50 @@
-import { memo, useEffect } from 'react';
+import { memo, useState } from 'react';
+import OnloadProvider from '../../lib';
 import H2 from '../components/h2';
-import Installation from '../components/installation';
-import config from '../config';
-import QrCode from '../components/qrcode';
+
+const ComponentNeedToPreload = () => {
+  const [percent, setPercent] = useState(0);
+  const [info, setInfo] = useState('');
+  return (
+    <div className='my-4'>
+      <OnloadProvider
+        onStep={(e) => {
+          const { total, loaded, url } = e;
+          setPercent(Math.floor((loaded / total) * 100));
+          setInfo(`target: ${url} was loaded.`);
+        }}
+        onload={(e) => {
+          const { total, loaded, url } = e;
+          setPercent(Math.floor((loaded / total) * 100));
+          setInfo(`all target was loaded`);
+        }}
+      >
+        <div className='w-full flex flex-row flex-wrap'>
+          {Array.from(Array(12).keys()).map((e) => (
+            <img key={e} src={`https://picsum.photos/id/${10 + e * 3 + e}/350/300`} />
+          ))}
+        </div>
+      </OnloadProvider>
+      <div className='w-full'>
+        <progress className='progress progress-primary w-full' value={percent} max='100' />
+        <div className='w-full text-primary'>{info}</div>
+      </div>
+    </div>
+  );
+};
 
 const Landing = memo(({ children }) => {
-  useEffect(() => {}, []);
+  const [currentTarget, setCurrentTarget] = useState();
   return (
     <div className='w-full'>
       {children}
-      <H2>usage</H2>
-      <Installation>
-        import {config.exportName} from '${config.name}'
-      </Installation>
-      <Installation>
-        <div>
-          <span>ad</span>
-        </div>
-      </Installation>
+      <H2>Demon</H2>
+      <p className='my-4'>Any background-image of div and src image of img will be pre-load.</p>
+      {currentTarget && <ComponentNeedToPreload />}
       <div className='btn-group'>
-        <button className='btn'>Button</button>
-        <button className='btn'>Button</button>
-        <button className='btn'>Button</button>
+        <button onClick={() => setCurrentTarget(true)} className='btn'>
+          load component
+        </button>
       </div>
     </div>
   );
