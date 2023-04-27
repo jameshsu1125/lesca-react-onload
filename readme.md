@@ -41,10 +41,10 @@ export default function () {
   }
 
   return (
-    <OnLoaderProvider hideBeforeLoaded onStep={onStep} onload={onload}>
+    <OnloadProvider hideBeforeLoaded onStep={onStep} onload={onload}>
       <img src='./myImage.jpg'>
       <div style={{ backgroundImage: 'url(./myBackgroundImage.jpg)' }} />
-    </OnLoaderProvider>
+    </OnloadProvider>
   );
 };
 ```

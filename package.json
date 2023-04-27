@@ -1,6 +1,6 @@
 {
   "name": "lesca-react-onload",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Progress and timing provided for loading and animation.",
   "main": "lib/index.js",
   "scripts": {
@@ -61,7 +61,7 @@
     "webpack-dev-server": "^4.13.3"
   },
   "author": "jameshsu1125 <jameshsu1125@gmail.com>",
-  "homepage": "https://github.com/jameshsu1125/npm-base-package",
+  "homepage": "https://github.com/jameshsu1125/lesca-react-onload",
   "repository": {
     "type": "git",
     "url": "git@github.com:jameshsu1125/lesca-react-onload.git"

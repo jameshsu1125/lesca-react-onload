@@ -2,7 +2,7 @@ import { Children, cloneElement, useEffect, useRef } from 'react';
 import ImageOnload from 'lesca-image-onload';
 import { ImageOnloadResult, OnLoaderProps } from './type';
 
-const OnLoaderProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoaderProps) => {
+const OnloadProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoaderProps) => {
   const ref = useRef();
 
   useEffect(() => {
@@ -20,10 +20,10 @@ const OnLoaderProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoad
   return Children.map(children, (child) => cloneElement(child, { ...child.props, ref }));
 };
 
-OnLoaderProvider.defaultProps = {
+OnloadProvider.defaultProps = {
   hideBeforeLoaded: true,
   onStep: () => {},
   onload: () => {},
 };
 
-export default OnLoaderProvider;
+export default OnloadProvider;
