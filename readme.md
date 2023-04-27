@@ -24,7 +24,7 @@ npm install lesca-react-onload --save
 ## Usage
 
 ```javascript
-import OnLoaderProvider from 'lesca-react-onload';
+import OnloadProvider from 'lesca-react-onload';
 ```
 
 ```JSX
