@@ -1,5 +1,5 @@
-import { Children, cloneElement, useEffect, useRef } from 'react';
 import ImageOnload from 'lesca-image-onload';
+import { Children, ReactNode, cloneElement, useEffect, useRef } from 'react';
 import { ImageOnloadResult, OnLoaderProps } from './type';
 
 const OnloadProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoaderProps) => {
