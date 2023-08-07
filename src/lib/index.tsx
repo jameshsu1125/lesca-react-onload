@@ -6,7 +6,7 @@ const OnloadProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoader
   const ref = useRef();
 
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current) {   
       new ImageOnload()
         .load(ref.current, {
           hideBeforeLoaded,

@@ -15,12 +15,12 @@ const ComponentNeedToPreload = () => {
         }}
         onload={(e) => {
           const { total, loaded } = e;
-          setPercent(Math.floor((loaded / total) * 100));
+          setPercent(Math.floor((loaded / total) * 100) || 100);
           setInfo(`all target was loaded`);
         }}
       >
         <div className='w-full flex flex-row flex-wrap'>
-          {Array.from(Array(12).keys()).map((e) => (
+          {Array.from(Array(0).keys()).map((e) => (
             <img key={e} src={`https://picsum.photos/id/${10 + e * 3 + e}/350/300`} />
           ))}
         </div>
