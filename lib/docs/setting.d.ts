@@ -1,8 +1,8 @@
 export namespace ACTION {
-    const page: string;
+    let page: string;
 }
 export namespace PAGE {
-    const demo: string;
+    let demo: string;
 }
 export const Context: import("react").Context<any>;
 export const initialState: {
