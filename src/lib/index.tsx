@@ -1,12 +1,12 @@
 import ImageOnload from 'lesca-image-onload';
-import { Children, ReactNode, cloneElement, useEffect, useRef } from 'react';
+import { Children, cloneElement, useEffect, useRef } from 'react';
 import { ImageOnloadResult, OnLoaderProps } from './type';
 
 const OnloadProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoaderProps) => {
   const ref = useRef();
 
   useEffect(() => {
-    if (ref.current) {   
+    if (ref.current) {
       new ImageOnload()
         .load(ref.current, {
           hideBeforeLoaded,
