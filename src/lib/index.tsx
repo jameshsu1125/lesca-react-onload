@@ -1,4 +1,5 @@
 import ImageOnload from 'lesca-image-onload';
+import { Result } from 'lesca-image-onload/lib/type';
 import { Children, cloneElement, useEffect, useRef } from 'react';
 import { ImageOnloadResult, OnLoaderProps } from './type';
 
@@ -10,7 +11,7 @@ const OnloadProvider = ({ children, hideBeforeLoaded, onStep, onload }: OnLoader
       new ImageOnload()
         .load(ref.current, {
           hideBeforeLoaded,
-          onUpdate: (e: ImageOnloadResult) => onStep?.(e),
+          onUpdate: (e: Result) => onStep?.(e),
         })
         .then((e: any) => {
           onload?.(e as ImageOnloadResult);
