@@ -1,6 +1,7 @@
 import { memo, useState } from 'react';
 import OnloadProvider from '../../lib';
 import H2 from '../components/h2';
+import A from './a';
 
 const ComponentNeedToPreload = () => {
   const [percent, setPercent] = useState(0);
@@ -33,8 +34,9 @@ const ComponentNeedToPreload = () => {
   );
 };
 
-const Landing = memo(() => {
+const Demo = memo(() => {
   const [currentTarget, setCurrentTarget] = useState();
+
   return (
     <div className='w-full'>
       <H2>Demo</H2>
@@ -48,4 +50,4 @@ const Landing = memo(() => {
     </div>
   );
 });
-export default Landing;
+export default Demo;

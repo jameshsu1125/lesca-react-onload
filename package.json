@@ -1,6 +1,6 @@
 {
   "name": "lesca-react-onload",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Progress and timing provided for loading and animation.",
   "main": "lib/index.js",
   "scripts": {
@@ -16,26 +16,27 @@
     "op": "babel src/lib -d lib --copy-files"
   },
   "keywords": [
-    "lesca"
+    "lesca",
+    "onload"
   ],
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.24.5",
-    "@babel/core": "^7.24.5",
+    "@babel/cli": "^7.24.6",
+    "@babel/core": "^7.24.6",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
-    "@babel/plugin-transform-runtime": "^7.24.3",
-    "@babel/preset-env": "^7.24.5",
-    "@babel/preset-react": "^7.24.1",
-    "@babel/preset-typescript": "^7.24.1",
+    "@babel/plugin-transform-runtime": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-react": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
     "@tailwindcss/typography": "^0.5.13",
-    "@types/react": "^18.3.1",
+    "@types/react": "^18.3.3",
     "babel-loader": "^9.1.3",
     "concurrently": "^8.2.2",
     "copy-and-watch": "^0.1.8",
     "copy-text-to-clipboard": "^3.2.0",
-    "css-loader": "^7.1.1",
-    "daisyui": "^4.10.2",
+    "css-loader": "^7.1.2",
+    "daisyui": "^4.11.1",
     "file-loader": "^6.2.0",
     "gh-pages": "^6.1.1",
     "html-react-parser": "^5.1.10",
@@ -47,7 +48,7 @@
     "less-watch-compiler": "^1.16.3",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
-    "postcss-preset-env": "^9.5.9",
+    "postcss-preset-env": "^9.5.14",
     "prettier": "3.2.5",
     "prism-react-renderer": "^2.3.1",
     "react": "^18.3.1",
@@ -67,7 +68,7 @@
     "url": "git@github.com:jameshsu1125/lesca-react-onload.git"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
-    "lesca-image-onload": "^3.0.8"
+    "@babel/runtime": "^7.24.6",
+    "lesca-image-onload": "^3.0.9"
   }
 }
