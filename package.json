@@ -1,11 +1,12 @@
 {
-  "name": "template-vite-react-npm",
+  "name": "lesca-react-onload",
   "private": false,
-  "description": "xxxxx",
-  "version": "0.0.0",
+  "description": "Progress and timing provided for loading and animation.",
+  "version": "2.0.0",
   "type": "module",
   "keywords": [
-    "lesca"
+    "lesca",
+    "images onloader"
   ],
   "files": [
     "lib"
