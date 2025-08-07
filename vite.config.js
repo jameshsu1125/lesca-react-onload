@@ -12,6 +12,9 @@ export default defineConfig(function (_a) {
         root: resolve(__dirname, 'src'),
         publicDir: resolve(__dirname, 'public'),
         build: {
+            rollupOptions: {
+                external: ['react', 'react/jsx-runtime'],
+            },
             emptyOutDir: true,
             outDir: '../lib',
             lib: {

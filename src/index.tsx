@@ -1,28 +1,26 @@
 import ImageOnload from 'lesca-image-onload';
-import { Children, cloneElement, useEffect, useRef } from 'react';
-import { ImageOnloadResult, OnLoaderProps } from './type';
+import React, { Children, cloneElement, useEffect, useRef } from 'react';
+import { OnLoaderProps } from './type';
 
-const OnloadProvider = ({
-  children,
-  hideBeforeLoaded = true,
-  onStep = () => {},
-  onload = () => {},
-}: OnLoaderProps) => {
-  const ref = useRef<HTMLImageElement | null>(null);
+const OnloadProvider = ({ children, hideBeforeLoaded = true, onStep, onload }: OnLoaderProps) => {
+  const ref = useRef(undefined);
 
   useEffect(() => {
-    if (ref.current) {
+    if (ref && ref.current) {
       new ImageOnload()
-        .load(ref.current, { hideBeforeLoaded, onUpdate: (e: any) => onStep?.(e) })
-        .then((e: any) => {
-          onload?.(e as ImageOnloadResult);
-        });
+        .load(ref.current, {
+          hideBeforeLoaded,
+          onUpdate: (e) => onStep?.(e),
+        })
+        .then((e) => onload?.(e));
     }
   }, []);
-  return Children.map(children, (child) => {
-    if (!child || typeof child !== 'object' || !('props' in child)) return child;
-    return cloneElement(child as React.ReactElement, { ...(child as any).props, ref });
-  });
+  return Children.map(children, (child) =>
+    // Ensure child is a valid React element before spreading props
+    child && typeof child === 'object' && 'props' in child
+      ? cloneElement(child as React.ReactElement, { ...(child as any).props, ref })
+      : child,
+  );
 };
 
 export default OnloadProvider;
