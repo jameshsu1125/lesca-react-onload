@@ -5,12 +5,15 @@ export interface Result {
     index?: number;
     url?: string;
 }
+export type onStart = Pick<Result, 'total' | 'loaded'> & {
+    urls: string[];
+};
 export interface OnLoaderProps {
     children: ReactElement;
     hideBeforeLoaded?: boolean;
     onStep?: (state: Result) => void;
     onload?: (state: Result) => void;
-    onStart?: () => void;
+    onStart?: (state: onStart) => void;
 }
 export interface ImageOnloadResult {
     loaded: number;
