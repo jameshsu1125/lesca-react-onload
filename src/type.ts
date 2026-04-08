@@ -7,11 +7,14 @@ export interface Result {
   url?: string;
 }
 
+export type onStart = Pick<Result, 'total' | 'loaded'> & { urls: string[] };
+
 export interface OnLoaderProps {
   children: ReactElement;
   hideBeforeLoaded?: boolean;
   onStep?: (state: Result) => void;
   onload?: (state: Result) => void;
+  onStart?: (state: onStart) => void;
 }
 
 export interface ImageOnloadResult {

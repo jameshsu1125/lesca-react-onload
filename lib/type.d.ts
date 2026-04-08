@@ -10,6 +10,7 @@ export interface OnLoaderProps {
     hideBeforeLoaded?: boolean;
     onStep?: (state: Result) => void;
     onload?: (state: Result) => void;
+    onStart?: () => void;
 }
 export interface ImageOnloadResult {
     loaded: number;

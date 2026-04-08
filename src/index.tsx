@@ -2,7 +2,9 @@ import ImageOnload from 'lesca-image-onload';
 import React, { Children, cloneElement, useEffect, useRef } from 'react';
 import { OnLoaderProps } from './type';
 
-const OnloadProvider = ({ children, hideBeforeLoaded = true, onStep, onload }: OnLoaderProps) => {
+const OnloadProvider = (props: OnLoaderProps) => {
+  const { children, hideBeforeLoaded = true, onStep, onload, onStart } = props;
+
   const ref = useRef(undefined);
 
   useEffect(() => {
@@ -10,9 +12,10 @@ const OnloadProvider = ({ children, hideBeforeLoaded = true, onStep, onload }: O
       new ImageOnload()
         .load(ref.current, {
           hideBeforeLoaded,
+          onStart: (r) => {
+            onStart?.(r);
+          },
           onUpdate: (e) => {
-            console.log(e);
-
             onStep?.(e);
           },
         })
