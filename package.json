@@ -26,7 +26,7 @@
     "rm": "rm -rf node_modules/ dist/ package-lock.json"
   },
   "dependencies": {
-    "lesca-image-onload": "^4.0.0",
+    "lesca-image-onload": "^4.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

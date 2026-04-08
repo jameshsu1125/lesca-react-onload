@@ -10,11 +10,16 @@ const OnloadProvider = ({ children, hideBeforeLoaded = true, onStep, onload }: O
       new ImageOnload()
         .load(ref.current, {
           hideBeforeLoaded,
-          onUpdate: (e) => onStep?.(e),
+          onUpdate: (e) => {
+            console.log(e);
+
+            onStep?.(e);
+          },
         })
         .then((e) => onload?.(e));
     }
   }, []);
+
   return Children.map(children, (child) =>
     // Ensure child is a valid React element before spreading props
     child && typeof child === 'object' && 'props' in child
