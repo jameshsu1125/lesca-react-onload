@@ -20,33 +20,32 @@
   },
   "scripts": {
     "dev": "NODE_ENV=DEV vite --host",
-    "build": "NODE_ENV=production tsc -b && vite build",
+    "build": "NODE_ENV=production vite build && tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "rm": "rm -rf node_modules/ dist/ package-lock.json"
   },
   "dependencies": {
-    "lesca-image-onload": "^4.1.2",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "lesca-image-onload": "^5.0.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.32.0",
-    "@types/node": "^24.2.0",
-    "@types/react": "^19.1.9",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react": "^4.7.0",
-    "eslint": "^9.32.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.2.0",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
     "path": "^0.12.7",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.6.14",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.39.0",
-    "vite": "^7.0.6",
-    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "prettier": "^3.8.2",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.58.1",
+    "vite": "^8.0.8",
+    "vite-plugin-css-injected-by-js": "^4.0.1",
     "vite-plugin-dts": "^4.5.4"
   }
 }

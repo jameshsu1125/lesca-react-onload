@@ -2,7 +2,6 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
-import dtsPlugin from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -41,11 +40,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     assetsInclude: ['**/*.gltf', '**/*.glb', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg'],
-    plugins: [
-      react(),
-      cssInjectedByJsPlugin(),
-      dtsPlugin({ insertTypesEntry: true, outDir: '../lib' }),
-    ],
+    plugins: [react(), cssInjectedByJsPlugin()],
     server: {
       open: true,
       port: 5173,

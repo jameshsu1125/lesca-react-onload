@@ -9,8 +9,9 @@ const OnloadProvider = (props: OnLoaderProps) => {
 
   useEffect(() => {
     if (ref && ref.current) {
-      new ImageOnload()
-        .load(ref.current, {
+      const imageOnload = new ImageOnload(ref.current);
+      requestAnimationFrame(()=>{
+        imageOnload.load( {
           hideBeforeLoaded,
           onStart: (r) => {
             onStart?.(r);
@@ -20,6 +21,8 @@ const OnloadProvider = (props: OnLoaderProps) => {
           },
         })
         .then((e) => onload?.(e));
+      })
+       
     }
   }, []);
 
