@@ -2,11 +2,11 @@
   "name": "lesca-react-onload",
   "private": false,
   "description": "Progress and timing provided for loading and animation.",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "type": "module",
   "keywords": [
     "lesca",
-    "images onloader"
+    "images onload"
   ],
   "files": [
     "lib"
