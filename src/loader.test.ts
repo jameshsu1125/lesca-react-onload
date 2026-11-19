@@ -5,13 +5,15 @@ import type { Result } from './type';
 // jsdom 不會真的載入圖片，也沒有實作 pseudo-element 的 getComputedStyle，這裡都用假的取代
 const requested: string[] = [];
 let failing: string[] = [];
+let manual: FakeImage[] | null = null; // 設定後圖片不會自動完成，改由測試手動觸發
 
 class FakeImage {
   onload: (() => void) | null = null;
   onerror: (() => void) | null = null;
   set src(url: string) {
     requested.push(url);
-    setTimeout(() => (failing.includes(url) ? this.onerror : this.onload)?.(), 0);
+    if (manual) manual.push(this);
+    else setTimeout(() => (failing.includes(url) ? this.onerror : this.onload)?.(), 0);
   }
 }
 
@@ -23,6 +25,7 @@ let warn: ReturnType<typeof vi.spyOn>;
 beforeEach(() => {
   requested.length = 0;
   failing = [];
+  manual = null;
   vi.stubGlobal('Image', FakeImage);
   vi.spyOn(window, 'getComputedStyle').mockImplementation((el, pseudo) =>
     pseudo
@@ -41,6 +44,27 @@ afterEach(() => {
 });
 
 describe('loadImages', () => {
+  it('依序一張一張載入：前一張完成後才開始下一張', async () => {
+    host.innerHTML = '<img src="/1.png" /><img src="/2.png" /><img src="/3.png" />';
+    const pending: FakeImage[] = [];
+    manual = pending;
+    const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+    const promise = loadImages(host);
+    expect(requested).toEqual(['/1.png']);
+
+    for (const expected of [
+      ['/1.png', '/2.png'],
+      ['/1.png', '/2.png', '/3.png'],
+    ]) {
+      pending.shift()?.onload?.();
+      await flush();
+      expect(requested).toEqual(expected);
+    }
+    pending.shift()?.onload?.();
+    expect(await promise).toMatchObject({ total: 3, loaded: 3 });
+  });
+
   it('沒有圖片時直接完成', async () => {
     host.innerHTML = '<p>text</p>';
     expect(await loadImages(host)).toEqual({ total: 0, loaded: 0, failed: [] });
