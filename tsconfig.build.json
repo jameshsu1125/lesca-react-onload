@@ -10,5 +10,12 @@
     "outDir": "lib"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["lib", "node_modules", "src/root.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"]
+  "exclude": [
+    "lib",
+    "node_modules",
+    "src/root.tsx",
+    "src/flash.tsx",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }
