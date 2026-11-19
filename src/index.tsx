@@ -1,37 +1,71 @@
 import ImageOnload from 'lesca-image-onload';
-import React, { Children, cloneElement, useEffect, useRef } from 'react';
+import { cloneElement, isValidElement, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type { ReactElement, ReactNode, Ref } from 'react';
 import { OnLoaderProps } from './type';
 
-const OnloadProvider = (props: OnLoaderProps) => {
-  const { children, hideBeforeLoaded = true, onStep, onload, onStart } = props;
+const setRef = <T,>(ref: Ref<T> | undefined, value: T | null) => {
+  if (typeof ref === 'function') ref(value);
+  else if (ref) ref.current = value;
+};
 
-  const ref = useRef(undefined);
+const OnloadProvider = (props: OnLoaderProps): ReactNode => {
+  const { children, hideBeforeLoaded = true } = props;
+
+  const [target, setTarget] = useState<HTMLElement | null>(null);
+
+  // 永遠指向最新的 callback，避免 effect 只跑一次造成 stale closure
+  const callbacks = useRef(props);
+  useLayoutEffect(() => {
+    callbacks.current = props;
+  });
+
+  const childRef = isValidElement(children)
+    ? (children as ReactElement<{ ref?: Ref<HTMLElement> }>).props.ref
+    : undefined;
+
+  // 同時寫入內部 ref 與子元素原本的 ref，不覆蓋使用者自己的 ref
+  const mergedRef = useCallback(
+    (node: HTMLElement | null) => {
+      setTarget(node);
+      setRef(childRef, node);
+    },
+    [childRef],
+  );
 
   useEffect(() => {
-    if (ref && ref.current) {
-      const imageOnload = new ImageOnload(ref.current);
-      requestAnimationFrame(()=>{
-        imageOnload.load( {
+    if (!target) return;
+
+    let disposed = false;
+    const imageOnload = new ImageOnload(target, hideBeforeLoaded);
+
+    // 等一個 frame 讓子元素的樣式（例如 CSS-in-JS、Tailwind）套用完成再掃描
+    const frame = requestAnimationFrame(() => {
+      imageOnload
+        .load({
           hideBeforeLoaded,
           onStart: (r) => {
-            onStart?.(r);
+            if (!disposed) callbacks.current.onStart?.(r);
           },
           onUpdate: (e) => {
-            onStep?.(e);
+            if (!disposed) callbacks.current.onStep?.(e);
           },
         })
-        .then((e) => onload?.(e));
-      })
-       
-    }
-  }, []);
+        .then((e) => {
+          if (!disposed) callbacks.current.onload?.(e);
+        });
+    });
 
-  return Children.map(children, (child) =>
-    // Ensure child is a valid React element before spreading props
-    child && typeof child === 'object' && 'props' in child
-      ? cloneElement(child as React.ReactElement, { ...(child as any).props, ref })
-      : child,
-  );
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
+    };
+    // 只在目標元素掛載時執行；hideBeforeLoaded 以掛載當下的值為準
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target]);
+
+  return isValidElement(children)
+    ? cloneElement(children as ReactElement<{ ref?: Ref<HTMLElement> }>, { ref: mergedRef })
+    : children;
 };
 
 export default OnloadProvider;
