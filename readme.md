@@ -56,15 +56,21 @@ export default function () {
 | **hideBeforeLoaded**:_boolean_ |   hide DOM before loaded    |    true |
 | **onStep**:_function_          | call when each image loaded |         |
 | **onload**:_function_          | call when all image loaded  |         |
+| **onStart**:_function_         |   call when scan finished   |         |
 
 ### args
 
-| args                |        description         |
-| :------------------ | :------------------------: |
-| **loaded**:_number_ | target image loaded number |
-| **total**:_number_  | target image total number  |
-| **index**:_number_  |  target image load index   |
-| **url**:_string_    |         target url         |
+| args                  |           description           |
+| :-------------------- | :-----------------------------: |
+| **loaded**:_number_   |   target image loaded number    |
+| **total**:_number_    |    target image total number    |
+| **index**:_number_    |     target image load index     |
+| **url**:_string_      |           target url            |
+| **failed**:_string[]_ | urls that failed to load so far |
+
+### Error handling
+
+If an image fails to load, a `console.warn` is printed and the image is still counted in `loaded`, so progress always reaches 100% and `onload` still fires. Check `failed` in the result to see which urls failed. Identical urls are requested only once per load.
 
 ### Features
 

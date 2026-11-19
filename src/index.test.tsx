@@ -10,19 +10,11 @@ type LoadOptions = {
 };
 
 const mock = vi.hoisted(() => ({
-  ctor: vi.fn(),
   load: vi.fn(),
 }));
 
-vi.mock('lesca-image-onload', () => ({
-  default: class {
-    constructor(...args: unknown[]) {
-      mock.ctor(...args);
-    }
-    load(options: LoadOptions) {
-      return mock.load(options);
-    }
-  },
+vi.mock('./loader', () => ({
+  loadImages: (target: HTMLElement, options: LoadOptions) => mock.load(target, options),
 }));
 
 import OnloadProvider from '.';
@@ -35,8 +27,7 @@ const frame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
 const loadCalled = () => vi.waitFor(() => expect(mock.load).toHaveBeenCalledTimes(1));
 
 beforeEach(() => {
-  mock.ctor.mockClear();
-  mock.load.mockReset().mockImplementation((o: LoadOptions) => {
+  mock.load.mockReset().mockImplementation((_target: HTMLElement, o: LoadOptions) => {
     options = o;
     return new Promise<Result>((resolve) => {
       finish = resolve;
@@ -142,14 +133,13 @@ describe('OnloadProvider', () => {
     expect(fnRef).toHaveBeenCalledWith(expect.any(HTMLDivElement));
   });
 
-  it('把 hideBeforeLoaded 同時傳給建構子與 load（預設 true）', async () => {
+  it('把 hideBeforeLoaded 傳給 loader（預設 true）', async () => {
     const { unmount } = render(
       <OnloadProvider hideBeforeLoaded={false}>
         <div />
       </OnloadProvider>,
     );
     await loadCalled();
-    expect(mock.ctor).toHaveBeenCalledWith(expect.any(HTMLDivElement), false);
     expect(options.hideBeforeLoaded).toBe(false);
     unmount();
 
@@ -160,7 +150,6 @@ describe('OnloadProvider', () => {
       </OnloadProvider>,
     );
     await loadCalled();
-    expect(mock.ctor).toHaveBeenLastCalledWith(expect.any(HTMLDivElement), true);
     expect(options.hideBeforeLoaded).toBe(true);
   });
 });

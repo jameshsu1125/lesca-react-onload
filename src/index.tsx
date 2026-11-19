@@ -1,6 +1,14 @@
-import ImageOnload from 'lesca-image-onload';
-import { cloneElement, isValidElement, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  cloneElement,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import type { ReactElement, ReactNode, Ref } from 'react';
+import { loadImages } from './loader';
 import { OnLoaderProps } from './type';
 
 const setRef = <T,>(ref: Ref<T> | undefined, value: T | null) => {
@@ -36,23 +44,20 @@ const OnloadProvider = (props: OnLoaderProps): ReactNode => {
     if (!target) return;
 
     let disposed = false;
-    const imageOnload = new ImageOnload(target, hideBeforeLoaded);
 
     // 等一個 frame 讓子元素的樣式（例如 CSS-in-JS、Tailwind）套用完成再掃描
     const frame = requestAnimationFrame(() => {
-      imageOnload
-        .load({
-          hideBeforeLoaded,
-          onStart: (r) => {
-            if (!disposed) callbacks.current.onStart?.(r);
-          },
-          onUpdate: (e) => {
-            if (!disposed) callbacks.current.onStep?.(e);
-          },
-        })
-        .then((e) => {
-          if (!disposed) callbacks.current.onload?.(e);
-        });
+      loadImages(target, {
+        hideBeforeLoaded,
+        onStart: (r) => {
+          if (!disposed) callbacks.current.onStart?.(r);
+        },
+        onUpdate: (e) => {
+          if (!disposed) callbacks.current.onStep?.(e);
+        },
+      }).then((e) => {
+        if (!disposed) callbacks.current.onload?.(e);
+      });
     });
 
     return () => {
