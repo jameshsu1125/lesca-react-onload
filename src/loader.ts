@@ -48,7 +48,15 @@ export const hideTarget = (target: HTMLElement) => {
 const loadOne = (url: string) =>
   new Promise<boolean>((resolve) => {
     const image = new Image();
-    image.onload = () => resolve(true);
+    image.onload = () => {
+      // onload 只代表「下載完成」，大圖在第一次顯示時仍要花時間解碼，畫面會短暫空白（閃一下）。
+      // 因此等解碼完成才算載入完成；解碼失敗（例如不支援）不影響結果。
+      if (typeof image.decode !== 'function') return resolve(true);
+      image.decode().then(
+        () => resolve(true),
+        () => resolve(true),
+      );
+    };
     image.onerror = () => {
       console.warn(`${TAG} Failed to load image: ${url}`);
       resolve(false);

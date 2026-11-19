@@ -5,11 +5,15 @@ import type { Result } from './type';
 // jsdom 不會真的載入圖片，也沒有實作 pseudo-element 的 getComputedStyle，這裡都用假的取代
 const requested: string[] = [];
 let failing: string[] = [];
+let decode: (() => Promise<void>) | undefined; // 設定後 FakeImage 才有 decode()
 let manual: FakeImage[] | null = null; // 設定後圖片不會自動完成，改由測試手動觸發
 
 class FakeImage {
   onload: (() => void) | null = null;
   onerror: (() => void) | null = null;
+  decode() {
+    return decode ? decode() : Promise.resolve();
+  }
   set src(url: string) {
     requested.push(url);
     if (manual) manual.push(this);
@@ -26,6 +30,7 @@ beforeEach(() => {
   requested.length = 0;
   failing = [];
   manual = null;
+  decode = undefined;
   vi.stubGlobal('Image', FakeImage);
   vi.spyOn(window, 'getComputedStyle').mockImplementation((el, pseudo) =>
     pseudo
@@ -44,6 +49,28 @@ afterEach(() => {
 });
 
 describe('loadImages', () => {
+  it('等圖片解碼完成才算載入完成（避免顯示時閃一下）', async () => {
+    host.innerHTML = '<img src="/big.jpg" />';
+    let finishDecode: () => void = () => {};
+    decode = () => new Promise<void>((resolve) => (finishDecode = resolve));
+    let done = false;
+
+    const promise = loadImages(host).then((r) => ((done = true), r));
+    await new Promise((resolve) => setTimeout(resolve, 20)); // onload 已觸發，但還在解碼
+    expect(done).toBe(false);
+
+    finishDecode();
+    expect(await promise).toMatchObject({ total: 1, loaded: 1, failed: [] });
+  });
+
+  it('解碼失敗不算載入失敗，也不警告', async () => {
+    host.innerHTML = '<img src="/odd.svg" />';
+    decode = () => Promise.reject(new Error('EncodingError'));
+
+    expect(await loadImages(host)).toMatchObject({ loaded: 1, failed: [] });
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('依序一張一張載入：前一張完成後才開始下一張', async () => {
     host.innerHTML = '<img src="/1.png" /><img src="/2.png" /><img src="/3.png" />';
     const pending: FakeImage[] = [];
