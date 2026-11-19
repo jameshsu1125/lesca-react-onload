@@ -15,7 +15,7 @@ const ComponentNeedToPreload = () => {
     <div className='my-4'>
       {isTailwindReady && (
         <OnloadProvider
-          hideBeforeLoaded={false}
+          hideBeforeLoaded={true}
           onStart={(e) => {
             console.log(e);
           }}

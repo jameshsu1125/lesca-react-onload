@@ -36,6 +36,15 @@ const scan = (target: HTMLElement): Item[] => {
   return items;
 };
 
+/** 隱藏元素並回傳還原函式（還原成原本的 inline display，而不是強制設成 block / flex） */
+export const hideTarget = (target: HTMLElement) => {
+  const previousDisplay = target.style.display;
+  target.style.display = 'none';
+  return () => {
+    target.style.display = previousDisplay;
+  };
+};
+
 const loadOne = (url: string) =>
   new Promise<boolean>((resolve) => {
     const image = new Image();
@@ -56,11 +65,8 @@ const loadOne = (url: string) =>
 export const loadImages = (target: HTMLElement, options: LoaderOptions = {}): Promise<Result> => {
   const { hideBeforeLoaded = true, onStart, onUpdate } = options;
 
-  const previousDisplay = target.style.display;
-  if (hideBeforeLoaded) target.style.display = 'none';
-  const restore = () => {
-    if (hideBeforeLoaded) target.style.display = previousDisplay;
-  };
+  const show = hideBeforeLoaded ? hideTarget(target) : undefined;
+  const restore = () => show?.();
 
   const items = scan(target);
   const total = items.length;

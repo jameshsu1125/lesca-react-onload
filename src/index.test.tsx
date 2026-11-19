@@ -13,7 +13,8 @@ const mock = vi.hoisted(() => ({
   load: vi.fn(),
 }));
 
-vi.mock('./loader', () => ({
+vi.mock('./loader', async (importActual) => ({
+  hideTarget: (await importActual<typeof import('./loader')>()).hideTarget,
   loadImages: (target: HTMLElement, options: LoadOptions) => mock.load(target, options),
 }));
 
@@ -133,23 +134,28 @@ describe('OnloadProvider', () => {
     expect(fnRef).toHaveBeenCalledWith(expect.any(HTMLDivElement));
   });
 
-  it('把 hideBeforeLoaded 傳給 loader（預設 true）', async () => {
-    const { unmount } = render(
-      <OnloadProvider hideBeforeLoaded={false}>
-        <div />
-      </OnloadProvider>,
-    );
-    await loadCalled();
-    expect(options.hideBeforeLoaded).toBe(false);
-    unmount();
-
-    mock.load.mockClear();
-    render(
+  it('hideBeforeLoaded（預設 true）：載入期間隱藏，完成後還原', async () => {
+    const { container } = render(
       <OnloadProvider>
-        <div />
+        <div style={{ display: 'grid' }} />
+      </OnloadProvider>,
+    );
+    const box = container.firstElementChild as HTMLElement;
+    expect(box.style.display).toBe('none');
+    await loadCalled();
+    expect(box.style.display).toBe('none');
+
+    await act(async () => finish({ total: 1, loaded: 1 }));
+    expect(box.style.display).toBe('grid');
+  });
+
+  it('hideBeforeLoaded={false}：不隱藏', async () => {
+    const { container } = render(
+      <OnloadProvider hideBeforeLoaded={false}>
+        <div style={{ display: 'grid' }} />
       </OnloadProvider>,
     );
     await loadCalled();
-    expect(options.hideBeforeLoaded).toBe(true);
+    expect((container.firstElementChild as HTMLElement).style.display).toBe('grid');
   });
 });

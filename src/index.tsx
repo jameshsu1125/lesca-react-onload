@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 import type { ReactElement, ReactNode, Ref } from 'react';
-import { loadImages } from './loader';
+import { hideTarget, loadImages } from './loader';
 import { OnLoaderProps } from './type';
 
 const setRef = <T,>(ref: Ref<T> | undefined, value: T | null) => {
@@ -20,6 +20,8 @@ const OnloadProvider = (props: OnLoaderProps): ReactNode => {
   const { children, hideBeforeLoaded = true } = props;
 
   const [target, setTarget] = useState<HTMLElement | null>(null);
+
+  const hidden = useRef<(() => void) | undefined>(undefined);
 
   // 永遠指向最新的 callback，避免 effect 只跑一次造成 stale closure
   const callbacks = useRef(props);
@@ -40,6 +42,18 @@ const OnloadProvider = (props: OnLoaderProps): ReactNode => {
     [childRef],
   );
 
+  // 在瀏覽器繪製前就先隱藏，避免內容閃現一個 frame 之後才消失
+  useLayoutEffect(() => {
+    if (!target || !hideBeforeLoaded) return;
+    const show = hideTarget(target);
+    hidden.current = show;
+    return () => {
+      hidden.current = undefined;
+      show();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target]);
+
   useEffect(() => {
     if (!target) return;
 
@@ -48,7 +62,7 @@ const OnloadProvider = (props: OnLoaderProps): ReactNode => {
     // 等一個 frame 讓子元素的樣式（例如 CSS-in-JS、Tailwind）套用完成再掃描
     const frame = requestAnimationFrame(() => {
       loadImages(target, {
-        hideBeforeLoaded,
+        hideBeforeLoaded: false, // 隱藏與還原由上面的 layout effect 負責
         onStart: (r) => {
           if (!disposed) callbacks.current.onStart?.(r);
         },
@@ -56,7 +70,9 @@ const OnloadProvider = (props: OnLoaderProps): ReactNode => {
           if (!disposed) callbacks.current.onStep?.(e);
         },
       }).then((e) => {
-        if (!disposed) callbacks.current.onload?.(e);
+        if (disposed) return;
+        hidden.current?.();
+        callbacks.current.onload?.(e);
       });
     });
 
@@ -64,8 +80,6 @@ const OnloadProvider = (props: OnLoaderProps): ReactNode => {
       disposed = true;
       cancelAnimationFrame(frame);
     };
-    // 只在目標元素掛載時執行；hideBeforeLoaded 以掛載當下的值為準
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
 
   return isValidElement(children)
