@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { OnLoaderProps } from './type';
-declare const OnloadProvider: (props: OnLoaderProps) => React.ReactElement<unknown, string | React.JSXElementConstructor<any>>[];
+declare const OnloadProvider: (props: OnLoaderProps) => ReactNode;
 export default OnloadProvider;
